@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ClearNear - Near Focus Calibrator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <!-- Screen 1: welcome / disclaimer -->
+    <section id="screen-welcome" class="screen active">
+      <h1>ClearNear</h1>
+      <p class="text">
+        ClearNear helps you find comfortable near-focus levels for each eye.
+        It is not a medical eye exam or prescription.
+      </p>
+      <button id="btn-start">Start</button>
+    </section>
+
+    <!-- Screen 2: optional prescription + profile -->
+    <section id="screen-profile" class="screen">
+      <h2>Your details (optional)</h2>
+      <label>
+        Age
+        <input type="number" id="input-age" min="18" max="100" />
+      </label>
+
+      <label>
+        Existing prescription (copy text from your script, if you have one)
+        <textarea id="input-rx" rows="3"
+          placeholder="Example: Right +1.50, Left +1.75, Add +1.50"></textarea>
+      </label>
+
+      <label>
+        Preferred reading distance (cm)
+        <input type="number" id="input-distance" min="20" max="80" />
+      </label>
+
+      <div class="buttons">
+        <button id="btn-profile-back">Back</button>
+        <button id="btn-profile-next">Next</button>
+      </div>
+    </section>
+
+    <!-- Screen 3: calibration with per-eye sliders -->
+    <section id="screen-calibration" class="screen">
+      <h2>Calibration - Step <span id="cal-step-number">1</span></h2>
+      <p class="instruction">
+        Hold your device at a comfortable reading distance.
+        Adjust each slider until the text below looks comfortably clear
+        for that eye.
+      </p>
+
+      <!-- Calibration text area -->
+      <div class="calibration-text-container">
+        <p id="calibration-text">
+          This is sample text for calibration. Focus on comfortable, easy reading
+          rather than perfect sharpness.
+        </p>
+      </div>
+
+      <!-- Per-eye sliders -->
+      <div class="sliders-row">
+        <div class="eye-column">
+          <h3>Left eye</h3>
+          <input type="range" id="slider-left" min="0" max="10" step="1" value="0" />
+          <div class="slider-labels">
+            <span>Less help</span>
+            <span>More help</span>
+          </div>
+          <p>Current level: <span id="label-left-value">0</span></p>
+        </div>
+
+        <div class="eye-column">
+          <h3>Right eye</h3>
+          <input type="range" id="slider-right" min="0" max="10" step="1" value="0" />
+          <div class="slider-labels">
+            <span>Less help</span>
+            <span>More help</span>
+          </div>
+          <p>Current level: <span id="label-right-value">0</span></p>
+        </div>
+      </div>
+
+      <div class="buttons">
+        <button id="btn-cal-back">Back</button>
+        <button id="btn-cal-next">Next</button>
+      </div>
+    </section>
+
+    <!-- Screen 4: results summary -->
+    <section id="screen-results" class="screen">
+      <h2>Your ClearNear profile</h2>
+      <div id="results-summary"></div>
+
+      <p class="text">
+        These levels are for comfort only and do not replace a professional
+        eye examination. If you have symptoms like headaches, eye pain, or
+        sudden changes in vision, see an eye care professional.
+      </p>
+
+      <div class="buttons">
+        <button id="btn-restart">Restart</button>
+      </div>
+    </section>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
