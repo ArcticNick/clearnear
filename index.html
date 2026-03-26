@@ -15,6 +15,11 @@
         ClearNear helps you find comfortable near-focus levels for each eye.
         It is not a medical eye exam or prescription.
       </p>
+      <p class="text">
+        For best results, allow camera access when prompted. ClearNear uses
+        your front camera to estimate viewing distance - no images are stored
+        or sent anywhere.
+      </p>
       <button id="btn-start">Start</button>
     </section>
 
@@ -43,7 +48,7 @@
       </div>
     </section>
 
-    <!-- Screen 3: calibration with per-eye sliders -->
+    <!-- Screen 3: calibration with per-eye sliders + camera -->
     <section id="screen-calibration" class="screen">
       <h2>Calibration - Step <span id="cal-step-number">1</span></h2>
       <p class="instruction">
@@ -52,11 +57,24 @@
         for that eye.
       </p>
 
+      <!-- Camera distance indicator -->
+      <div id="camera-container">
+        <video id="camera-feed" autoplay playsinline muted></video>
+        <div id="distance-indicator">
+          <span id="distance-label">Distance: detecting...</span>
+          <div id="distance-bar-container">
+            <div id="distance-bar"></div>
+          </div>
+          <span id="distance-band">--</span>
+        </div>
+      </div>
+
       <!-- Calibration text area -->
       <div class="calibration-text-container">
         <p id="calibration-text">
           This is sample text for calibration. Focus on comfortable, easy reading
-          rather than perfect sharpness.
+          rather than perfect sharpness. As you move the sliders, notice how the
+          text clarity changes at your current viewing distance.
         </p>
       </div>
 
@@ -64,20 +82,24 @@
       <div class="sliders-row">
         <div class="eye-column">
           <h3>Left eye</h3>
-          <input type="range" id="slider-left" min="0" max="10" step="1" value="0" />
-          <div class="slider-labels">
-            <span>Less help</span>
-            <span>More help</span>
+          <div class="slider-wrapper horizontal">
+            <input type="range" id="slider-left" min="0" max="10" step="1" value="0" />
+            <div class="slider-labels">
+              <span>Less help</span>
+              <span>More help</span>
+            </div>
           </div>
           <p>Current level: <span id="label-left-value">0</span></p>
         </div>
 
         <div class="eye-column">
           <h3>Right eye</h3>
-          <input type="range" id="slider-right" min="0" max="10" step="1" value="0" />
-          <div class="slider-labels">
-            <span>Less help</span>
-            <span>More help</span>
+          <div class="slider-wrapper horizontal">
+            <input type="range" id="slider-right" min="0" max="10" step="1" value="0" />
+            <div class="slider-labels">
+              <span>Less help</span>
+              <span>More help</span>
+            </div>
           </div>
           <p>Current level: <span id="label-right-value">0</span></p>
         </div>
