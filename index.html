@@ -2,132 +2,234 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>ClearNear - Near Focus Calibrator</title>
+  <title>Refocus — Your Screen, Your Clarity</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Refocus helps you find comfortable near-focus levels for each eye. A comfort tool, not a medical device." />
+  <meta name="theme-color" content="#4A9E8E" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="app">
-    <!-- Screen 1: welcome / disclaimer -->
-    <section id="screen-welcome" class="screen active">
-      <h1>ClearNear</h1>
-      <p class="text">
-        ClearNear helps you find comfortable near-focus levels for each eye.
-        It is not a medical eye exam or prescription.
-      </p>
-      <p class="text">
-        For best results, allow camera access when prompted. ClearNear uses
-        your front camera to estimate viewing distance - no images are stored
-        or sent anywhere.
-      </p>
-      <button id="btn-start">Start</button>
-    </section>
+  <div id="app">
 
-    <!-- Screen 2: optional prescription + profile -->
-    <section id="screen-profile" class="screen">
-      <h2>Your details (optional)</h2>
-      <label>
-        Age
-        <input type="number" id="input-age" min="18" max="100" />
-      </label>
+    <!-- DISCLAIMER BANNER (first 3 uses) -->
+    <div id="disclaimer-banner" class="disclaimer-banner hidden">
+      Refocus is a comfort tool. It does not diagnose or treat any eye condition.
+      <button id="btn-dismiss-disclaimer" class="btn-text">Got it</button>
+    </div>
 
-      <label>
-        Existing prescription (copy text from your script, if you have one)
-        <textarea id="input-rx" rows="3"
-          placeholder="Example: Right +1.50, Left +1.75, Add +1.50"></textarea>
-      </label>
+    <!-- SCREEN 1: HOME / FOCUS NOW -->
+    <section id="screen-home" class="screen active">
+      <div class="status-bar">
+        <span id="status-distance" class="status-item">
+          <span class="status-icon">&#128207;</span> Distance: --
+        </span>
+        <span id="status-lighting" class="status-item">
+          <span class="status-icon">&#9728;</span> Manual mode
+        </span>
+      </div>
 
-      <label>
-        Preferred reading distance (cm)
-        <input type="number" id="input-distance" min="20" max="80" />
-      </label>
+      <div class="home-hero">
+        <h1 class="app-title">Refocus</h1>
+        <p class="app-tagline">Your screen, your clarity.</p>
+      </div>
 
-      <div class="buttons">
-        <button id="btn-profile-back">Back</button>
-        <button id="btn-profile-next">Next</button>
+      <div class="mode-selector">
+        <button id="btn-mode" class="mode-pill">Reading</button>
+      </div>
+
+      <div class="slider-section">
+        <label class="slider-label">Make it clearer</label>
+        <div class="slider-wrap">
+          <span class="slider-min">A</span>
+          <input type="range" id="slider-clarity" min="0" max="10" value="3" class="slider" />
+          <span class="slider-max">A</span>
+        </div>
+        <div class="slider-value-wrap">
+          <span id="clarity-value" class="slider-value">3</span>
+        </div>
+      </div>
+
+      <div id="preview-block" class="preview-card">
+        <p id="preview-text">The quick brown fox jumps over the lazy dog. Refocus helps you read comfortably at any distance.</p>
+        <span class="preview-caption">This is how text will look at your current setting.</span>
+      </div>
+
+      <div class="home-actions">
+        <button id="btn-calibrate" class="btn-outline">Calibrate</button>
+        <button id="btn-save-home" class="btn-primary">Save</button>
       </div>
     </section>
 
-    <!-- Screen 3: calibration with per-eye sliders + camera -->
+    <!-- SCREEN 2: CALIBRATION -->
     <section id="screen-calibration" class="screen">
-      <h2>Calibration - Step <span id="cal-step-number">1</span></h2>
-      <p class="instruction">
-        Hold your device at a comfortable reading distance.
-        Adjust each slider until the text below looks comfortably clear
-        for that eye.
-      </p>
+      <div class="screen-header">
+        <button id="btn-cal-back" class="btn-icon">&larr;</button>
+        <h2>Calibration</h2>
+        <span id="cal-step-indicator" class="step-indicator">Step 1 of 2</span>
+      </div>
 
-      <!-- Camera distance indicator -->
-      <div id="camera-container">
-        <video id="camera-feed" autoplay playsinline muted></video>
-        <div id="distance-indicator">
-          <span id="distance-label">Distance: detecting...</span>
-          <div id="distance-bar-container">
-            <div id="distance-bar"></div>
-          </div>
-          <span id="distance-band">--</span>
+      <!-- Step 1: Distance -->
+      <div id="cal-step-1" class="cal-step active">
+        <div class="cal-instruction">
+          <p>Hold your device at a comfortable reading distance.</p>
         </div>
-      </div>
-
-      <!-- Calibration text area -->
-      <div class="calibration-text-container">
-        <p id="calibration-text">
-          This is sample text for calibration. Focus on comfortable, easy reading
-          rather than perfect sharpness. As you move the sliders, notice how the
-          text clarity changes at your current viewing distance.
-        </p>
-      </div>
-
-      <!-- Per-eye sliders -->
-      <div class="sliders-row">
-        <div class="eye-column">
-          <h3>Left eye</h3>
-          <div class="slider-wrapper horizontal">
-            <input type="range" id="slider-left" min="0" max="10" step="1" value="0" />
-            <div class="slider-labels">
-              <span>Less help</span>
-              <span>More help</span>
+        <div class="camera-section">
+          <video id="camera-feed" autoplay playsinline muted class="camera-feed"></video>
+          <div class="distance-display">
+            <span id="distance-label">Distance: detecting...</span>
+            <div class="distance-bar-wrap">
+              <div id="distance-bar" class="distance-bar"></div>
             </div>
+            <span id="distance-band">--</span>
           </div>
-          <p>Current level: <span id="label-left-value">0</span></p>
         </div>
-
-        <div class="eye-column">
-          <h3>Right eye</h3>
-          <div class="slider-wrapper horizontal">
-            <input type="range" id="slider-right" min="0" max="10" step="1" value="0" />
-            <div class="slider-labels">
-              <span>Less help</span>
-              <span>More help</span>
-            </div>
-          </div>
-          <p>Current level: <span id="label-right-value">0</span></p>
+        <div class="cal-sample-text">
+          <p>Read this text aloud: "The morning sun cast golden light across the quiet garden."</p>
         </div>
+        <button id="btn-cal-step1-next" class="btn-primary btn-full">I can read this comfortably</button>
       </div>
 
-      <div class="buttons">
-        <button id="btn-cal-back">Back</button>
-        <button id="btn-cal-next">Next</button>
+      <!-- Step 2: Clarity -->
+      <div id="cal-step-2" class="cal-step">
+        <div class="cal-instruction">
+          <p>Adjust until this text is perfectly clear.</p>
+        </div>
+        <div id="cal-text-block" class="cal-text-block">
+          <p>Pack my box with five dozen liquor jugs. The five boxing wizards jump quickly. How vexingly quick daft zebras jump.</p>
+        </div>
+        <div class="cal-sliders">
+          <div class="cal-slider-group">
+            <label>Left eye</label>
+            <input type="range" id="slider-left" min="0" max="10" value="0" class="slider" />
+            <span id="label-left-value" class="slider-val">0</span>
+          </div>
+          <div class="cal-slider-group">
+            <label>Right eye</label>
+            <input type="range" id="slider-right" min="0" max="10" value="0" class="slider" />
+            <span id="label-right-value" class="slider-val">0</span>
+          </div>
+        </div>
+        <button id="btn-cal-save" class="btn-primary btn-full">Save as my baseline</button>
+      </div>
+
+      <div id="cal-toast" class="toast hidden">
+        &#10003; Baseline saved. You can recalibrate any time from Settings.
       </div>
     </section>
 
-    <!-- Screen 4: results summary -->
-    <section id="screen-results" class="screen">
-      <h2>Your ClearNear profile</h2>
-      <div id="results-summary"></div>
-
-      <p class="text">
-        These levels are for comfort only and do not replace a professional
-        eye examination. If you have symptoms like headaches, eye pain, or
-        sudden changes in vision, see an eye care professional.
-      </p>
-
-      <div class="buttons">
-        <button id="btn-restart">Restart</button>
+    <!-- SCREEN 3: DEVICE / CONTEXT SELECTOR -->
+    <section id="screen-devices" class="screen">
+      <div class="screen-header">
+        <h2>Choose your device</h2>
+      </div>
+      <div class="device-grid">
+        <button class="device-card" data-device="phone">
+          <span class="device-icon">&#128241;</span>
+          <span class="device-name">Phone</span>
+          <span class="device-distance">Usually 25–40 cm</span>
+        </button>
+        <button class="device-card" data-device="tablet">
+          <span class="device-icon">&#128195;</span>
+          <span class="device-name">Tablet</span>
+          <span class="device-distance">Usually 35–50 cm</span>
+        </button>
+        <button class="device-card" data-device="laptop">
+          <span class="device-icon">&#128187;</span>
+          <span class="device-name">Laptop / Monitor</span>
+          <span class="device-distance">Usually 50–70 cm</span>
+        </button>
+        <button class="device-card" data-device="tv">
+          <span class="device-icon">&#128250;</span>
+          <span class="device-name">TV</span>
+          <span class="device-distance">Usually 150–300 cm</span>
+        </button>
       </div>
     </section>
+
+    <!-- SCREEN 4: SETTINGS -->
+    <section id="screen-settings" class="screen">
+      <div class="screen-header">
+        <h2>Settings</h2>
+      </div>
+      <div class="settings-list">
+        <div class="setting-item">
+          <span>Dark mode</span>
+          <label class="toggle">
+            <input type="checkbox" id="toggle-dark" />
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="setting-item">
+          <span>Units</span>
+          <select id="select-units" class="select-small">
+            <option value="cm">cm</option>
+            <option value="inches">inches</option>
+          </select>
+        </div>
+        <button id="btn-recalibrate" class="setting-item setting-btn">Recalibrate</button>
+        <button id="btn-view-insights" class="setting-item setting-btn">Insights</button>
+        <button id="btn-reset" class="setting-item setting-btn setting-danger">Reset all data</button>
+      </div>
+      <div class="settings-disclaimer">
+        Refocus is a comfort tool. It does not diagnose or treat any eye condition. See an eye care professional for medical advice.
+      </div>
+    </section>
+
+    <!-- SCREEN 5: INSIGHTS -->
+    <section id="screen-insights" class="screen">
+      <div class="screen-header">
+        <button id="btn-insights-back" class="btn-icon">&larr;</button>
+        <h2>Insights</h2>
+      </div>
+      <div class="insights-content">
+        <div class="insight-card">
+          <span class="insight-label">Most used mode</span>
+          <span id="insight-mode" class="insight-value">--</span>
+        </div>
+        <div class="insight-card">
+          <span class="insight-label">Sessions this week</span>
+          <span id="insight-sessions" class="insight-value">0</span>
+        </div>
+        <div class="insight-card">
+          <span class="insight-label">Left eye level</span>
+          <span id="insight-left" class="insight-value">--</span>
+        </div>
+        <div class="insight-card">
+          <span class="insight-label">Right eye level</span>
+          <span id="insight-right" class="insight-value">--</span>
+        </div>
+        <div class="insight-card">
+          <span class="insight-label">Approx. reader range (left)</span>
+          <span id="insight-range-left" class="insight-value">--</span>
+        </div>
+        <div class="insight-card">
+          <span class="insight-label">Approx. reader range (right)</span>
+          <span id="insight-range-right" class="insight-value">--</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- BOTTOM NAV -->
+    <nav class="bottom-nav">
+      <button class="nav-btn active" data-screen="home">
+        <span class="nav-icon">&#127968;</span>
+        <span class="nav-label">Focus</span>
+      </button>
+      <button class="nav-btn" data-screen="devices">
+        <span class="nav-icon">&#128242;</span>
+        <span class="nav-label">Devices</span>
+      </button>
+      <button class="nav-btn" data-screen="settings">
+        <span class="nav-icon">&#9881;</span>
+        <span class="nav-label">Settings</span>
+      </button>
+    </nav>
+
   </div>
-
   <script src="app.js"></script>
 </body>
 </html>
